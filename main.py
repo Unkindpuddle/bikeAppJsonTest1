@@ -2,6 +2,7 @@ from flask import Flask
 from flask import request
 from flask import jsonify
 import math
+from datetime import *
 
 app = Flask(__name__)
 
@@ -34,8 +35,15 @@ def json_test(interface=None):
 
       Lat = XMeters/111111
       Long = (YMeters/111111)/math.cos(math.radians(Lat))
+      now = datetime.now();
+      d = timedelta(seconds = 60)
+      arive1 = now + 1.5*d
+      s_arive1 = arive1.isoformat()
+
+      arive2 = now + 2.5*d
+      s_arive2 = arive2.isoformat()
       
-    mydict = {"Lat" : Lat, "Long" : Long}
+    mydict = dict({"Lat" : Lat, "Long" : Long, "Times": [s_arive1, s_arive2]})
     return jsonify(mydict)
 
 @app.route('/adhoc_test/')
@@ -62,8 +70,16 @@ def adhoc_test():
 
       Lat = XMeters/111111
       Long = (YMeters/111111)/math.cos(math.radians(Lat))
+      now = datetime.now();
+      d = timedelta(seconds = 60)
+      arive1 = now + 1.5*d
+      s_arive1 = arive1.isoformat()
+
+      arive2 = now + 2.5*d
+      s_arive2 = arive2.isoformat()
       
-    mydict = {"Lat" : Lat, "Long" : Long}
+    
+    mydict = dict({"Lat" : Lat, "Long" : Long, "Times": [s_arive1, s_arive2]})
     return jsonify(mydict)
   
 if __name__ == '__main__':
