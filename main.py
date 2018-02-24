@@ -79,7 +79,7 @@ def adhoc_test():
       s_arive2 = arive2.isoformat()
       
     
-    mydict = dict({"Lat" : Lat, "Long" : Long, "Times": [s_arive1, s_arive2]})
+    mydict = dict({"Lat" : Lat, "Long" : Lng, "Times": [s_arive1, s_arive2]})
     return jsonify(mydict)
   
 if __name__ == '__main__':
