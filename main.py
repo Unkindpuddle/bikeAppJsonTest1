@@ -10,7 +10,7 @@ app = Flask(__name__)
 def hello_world():
   taco = 'Hello, World!'
   return request.query_string
-
+  
 @app.route('/json_test/')
 def json_test(interface=None):
 
@@ -30,11 +30,11 @@ def json_test(interface=None):
       YMeters = Lat*111111
       XMeters = 111111*Long*math.cos(math.radians(Lat))
       distance = 30
-      XMeters += distance*math.sin(math.radians(Bear))
-      YMeters += distance*math.cos(math.radians(Bear))
+      XMeters += distance*math.sin(math.radians(BearingToDegrees(Bear)))
+      YMeters += distance*math.cos(math.radians(BearingToDegrees(Bear)))
 
-      Lat = YMeters/111111
-      Long = (XMeters/111111)/math.cos(math.radians(Lat))
+      Lat = round(YMeters/111111,5) # this corespondes to around 1 meter accuracy all we realy want
+      Long = round((XMeters/111111)/math.cos(math.radians(Lat)),5) # likewise
       now = datetime.now();
       d = timedelta(seconds = 60)
       arive1 = now + 1.5*d
@@ -46,6 +46,8 @@ def json_test(interface=None):
     mydict = dict({"Lat" : Lat, "Lng" : Long, "Times": [s_arive1, s_arive2]})
     return jsonify(mydict)
 
+def BearingToDegrees(y): # took an embarisingly long time to figure this out
+	return (-y+90)%360
   
 if __name__ == '__main__':
   app.run()
