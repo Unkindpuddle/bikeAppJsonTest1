@@ -26,22 +26,32 @@ def json_test(interface=None):
     if (Bear_S):
       Bear = float(Bear_S)
 
+    distance = 0
+    Dist_S = request.args.get('Dist', '')
+    if (Dist_S):
+      distance = float(Dist_S)    
+
     if ( (Long) and (Lat)):
-      YMeters = Lat*111111
-      XMeters = 111111*Long*math.cos(math.radians(Lat))
-      distance = 30
-      YMeters += distance*math.sin(math.radians(BearingToDegrees(Bear)))
-      XMeters += distance*math.cos(math.radians(BearingToDegrees(Bear)))
+      if(not distance):
+        distance = 30
+      YOffset = round(distance*math.sin(math.radians(BearingToDegrees(Bear)))/111111,8)
+      Lat = YOffset + Lat
+      XScale  = (math.cos(math.radians(BearingToDegrees(Bear))))
+      XMeters = distance*XScale
+      LongScale = math.cos(math.radians(Lat))
+      #Lat = Lat + YOffest
+      Lat = round(Lat,5) #meter scale accuracy
+      XOffset = round((XMeters/111111)/LongScale,8) #preliminary rounding
+      Long = round(XOffset + Long,5) # meter scale accuracy
+	
+	
+    now = datetime.now();
+    d = timedelta(seconds = 60)
+    arive1 = now + 1.5*d
+    s_arive1 = arive1.isoformat()
 
-      Lat = round(YMeters/111111,5) # this corespondes to around 1 meter accuracy all we realy want
-      Long = round((XMeters/111111)/math.cos(math.radians(Lat)),5) # likewise
-      now = datetime.now();
-      d = timedelta(seconds = 60)
-      arive1 = now + 1.5*d
-      s_arive1 = arive1.isoformat()
-
-      arive2 = now + 2.5*d
-      s_arive2 = arive2.isoformat()
+    arive2 = now + 2.5*d
+    s_arive2 = arive2.isoformat()
       
     mydict = dict({"Lat" : Lat, "Lng" : Long, "Times": [s_arive1, s_arive2]})
     return jsonify(mydict)
