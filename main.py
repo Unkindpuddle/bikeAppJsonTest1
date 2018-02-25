@@ -27,14 +27,14 @@ def json_test(interface=None):
       Bear = float(Bear_S)
 
     if ( (Long) and (Lat)):
-      XMeters = Lat*111111
-      YMeters = 111111*Long*math.cos(math.radians(Lat))
+      YMeters = Lat*111111
+      XMeters = 111111*Long*math.cos(math.radians(Lat))
       distance = 30
       XMeters += distance*math.sin(math.radians(Bear))
       YMeters += distance*math.cos(math.radians(Bear))
 
-      Lat = XMeters/111111
-      Long = (YMeters/111111)/math.cos(math.radians(Lat))
+      Lat = YMeters/111111
+      Long = (XMeters/111111)/math.cos(math.radians(Lat))
       now = datetime.now();
       d = timedelta(seconds = 60)
       arive1 = now + 1.5*d
