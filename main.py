@@ -5,6 +5,8 @@ import math
 from datetime import *
 
 app = Flask(__name__)
+d = timedelta(seconds = 60)
+arive1 = datetime.utcnow() + 1.5*d
 
 @app.route('/')
 def hello_world():
@@ -44,16 +46,26 @@ def json_test(interface=None):
       XOffset = round((XMeters/111111)/LongScale,8) #preliminary rounding
       Long = round(XOffset + Long,5) # meter scale accuracy
 	
-	
-    now = datetime.now();
-    d = timedelta(seconds = 60)
-    arive1 = now + 1.5*d
-    s_arive1 = arive1.isoformat()
 
-    arive2 = now + 2.5*d
+    global now
+    global arive1
+    now = datetime.utcnow()
+    if (now > arive1):
+      arive1 = now + 1.5*d
+    s_arive1 = arive1.isoformat()
+    arive2 = arive1 + d
     s_arive2 = arive2.isoformat()
-      
-    mydict = dict({"Lat" : Lat, "Lng" : Long, "Times": [s_arive1, s_arive2]})
+
+
+    #tty is set to time out after 30 seconds or the
+    #arivel time which ever comes first
+    d2 = timedelta(seconds = 30)
+    if ((arive1 - now) > d2):
+      TTL = round(d2.total_seconds())
+    else:
+      TTL = round((arive1-now).total_seconds())
+    
+    mydict = dict({"Lat" : Lat, "Lng" : Long, "TTL": TTL, "Times": [s_arive1, s_arive2]})
     return jsonify(mydict)
 
 def BearingToDegrees(y): # took an embarisingly long time to figure this out
